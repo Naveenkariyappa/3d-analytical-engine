@@ -15,10 +15,8 @@ Then open <http://localhost:4173/demo/> in your browser.
 ## What the preview shows
 
 - An animated multidimensional point-cloud concept for the future Atlas 3D scatter and embedding-space experiences.
-- The planned architecture stack from application code down to WebGL/WebGPU.
-- Cards for every planned React UI component, including Scene, Dimensions, Color, Size, Timeline, Clusters, HeatField, Camera, Filter, and PluginSlot.
-- Cards for every visualization family from the PRD, each with a description.
-- Cards for every visualization grammar primitive, encoding, and interaction, each with a description.
+- Cards for every visualization family from the PRD.
+- Cards for every visualization grammar primitive, encoding, and interaction.
 
 ## Where the source lives
 
