@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project Atlas Component Demo</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #070b18; color: #eef4ff; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 18% 8%, rgba(76, 201, 240, .24), transparent 28rem), radial-gradient(circle at 82% 0%, rgba(181, 23, 158, .2), transparent 24rem), linear-gradient(135deg, #070b18 0%, #10172a 54%, #060712 100%); }
+      main { width: min(1220px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0; }
+      .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 520px); gap: 28px; align-items: stretch; }
+      .panel, .component-card, .catalog-card { border: 1px solid rgba(148, 163, 184, .26); border-radius: 28px; background: rgba(15, 23, 42, .74); box-shadow: 0 30px 90px rgba(0, 0, 0, .32); overflow: hidden; }
+      .copy { padding: 36px; }
+      h1 { margin: 0 0 16px; font-size: clamp(2.3rem, 6vw, 5.4rem); line-height: .92; letter-spacing: -.07em; }
+      h2 { margin: 0 0 10px; font-size: clamp(1.5rem, 3vw, 2.4rem); letter-spacing: -.04em; }
+      h3 { margin: 0 0 8px; font-size: 1rem; color: #7dd3fc; text-transform: uppercase; letter-spacing: .05em; }
+      p { color: #b9c7dc; line-height: 1.65; }
+      .lead { max-width: 68ch; font-size: 1.1rem; }
+      .badge-row, .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+      .badge, .chip { border-radius: 999px; padding: 8px 12px; font-size: .86rem; }
+      .badge { border: 1px solid rgba(125, 211, 252, .34); background: rgba(14, 165, 233, .12); color: #dff6ff; }
+      .chip { background: rgba(255, 255, 255, .08); color: #dbeafe; }
+      #atlasCanvas { display: block; width: 100%; height: 100%; min-height: 430px; background: radial-gradient(circle at 50% 45%, rgba(59, 130, 246, .2), transparent 23rem); }
+      .section { margin-top: 34px; }
+      .section-header { display: flex; justify-content: space-between; gap: 18px; align-items: end; margin-bottom: 16px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 16px; }
+      .component-card, .catalog-card { border-radius: 22px; padding: 18px; box-shadow: none; }
+      .component-card code { display: block; margin-top: 14px; padding: 12px; border-radius: 14px; color: #c4b5fd; background: rgba(15, 23, 42, .9); white-space: pre-wrap; }
+      .catalog-card ul { margin: 12px 0 0; padding-left: 18px; color: #dbeafe; line-height: 1.7; }
+      .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; padding: 20px; }
+      .flow span { padding: 14px; border-radius: 16px; background: rgba(14, 165, 233, .1); border: 1px solid rgba(125, 211, 252, .24); text-align: center; color: #e0f2fe; }
+      @media (max-width: 880px) { .hero { grid-template-columns: 1fr; } .section-header { display: block; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <article class="panel copy">
+          <h1>Atlas UI Component Demo</h1>
+          <p class="lead">A visible demo page for the Project Atlas React-first API direction. It renders every planned UI component, engine layer, visualization family, primitive, encoding, and interaction with descriptions.</p>
+          <div class="badge-row">
+            <span class="badge">Scene API</span><span class="badge">Semantic Engine</span><span class="badge">Analytics Engine</span><span class="badge">3D point cloud</span><span class="badge">Plugin-ready</span>
+          </div>
+        </article>
+        <div class="panel"><canvas id="atlasCanvas" width="1040" height="860" aria-label="Animated multidimensional point cloud preview"></canvas></div>
+      </section>
+
+      <section class="section panel copy">
+        <div class="section-header"><div><h2>Architecture stack</h2><p>Atlas keeps analytics renderer-agnostic while allowing React Three Fiber, Three.js, and future WebGPU/XR adapters.</p></div></div>
+        <div id="architecture" class="flow"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-header"><div><h2>React UI components</h2><p>These cards show how the declarative API maps data, encodings, analysis layers, and interaction affordances.</p></div></div>
+        <div id="components" class="grid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-header"><div><h2>Visualization families</h2><p>Every family from the PRD is rendered with a description and planned members.</p></div></div>
+        <div id="families" class="grid"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-header"><div><h2>Visualization grammar</h2><p>Atlas composes scenes from primitives, encodings, and interactions instead of one-off chart widgets.</p></div></div>
+        <div id="grammar" class="grid"></div>
+      </section>
+    </main>
+
+    <script type="module">
+      const architecture = ['Application', 'Atlas React Components', 'Semantic Engine', 'Analytics Engine', 'Interaction Engine', 'Scene Graph', 'Renderer Adapter', 'React Three Fiber', 'Three.js', 'WebGL / WebGPU'];
+      const components = [
+        ['Scene', 'Root canvas and scene coordinator that receives data and composes dimensions, encodings, layers, camera, and interactions.', '<Scene data={sales}>...</Scene>'],
+        ['Dimensions', 'Maps dataset fields onto x, y, z, and time axes for multidimensional exploration.', '<Dimensions x="revenue" y="profit" z="growth" />'],
+        ['Color', 'Encodes a semantic field as color for category, intensity, confidence, or cluster comparison.', '<Color by="region" />'],
+        ['Size', 'Encodes numeric magnitude as point, bubble, glyph, or particle size.', '<Size by="customers" />'],
+        ['Timeline', 'Adds temporal playback, scrubber state, and time-aware filtering.', '<Timeline by="month" />'],
+        ['Clusters', 'Runs or displays clustering so related records can be grouped, selected, and explained.', '<Clusters method="auto" />'],
+        ['HeatField', 'Renders density, intensity, or risk fields over a scatter, terrain, surface, or spatial layer.', '<HeatField metric="density" />'],
+        ['Camera', 'Provides orbit, bookmark, guided navigation, and story-mode viewpoints.', '<Camera mode="orbit" />'],
+        ['Filter', 'Applies semantic filters, ranges, facets, and AI-generated query constraints.', '<Filter field="region" in={["Europe"]} />'],
+        ['PluginSlot', 'Mounts domain extensions such as finance, cybersecurity, genomics, IoT, and manufacturing plugins.', '<PluginSlot name="cybersecurity" />']
+      ];
+      const families = {
+        Statistical: ['Classical quantitative views for comparing distributions, trends, and measures.', ['Bar', 'Line', 'Area', 'Scatter', 'Bubble', 'Histogram', 'Heatmap', 'Box Plot', 'Violin', 'Parallel Coordinates', 'Radar']],
+        '3D': ['Spatialized multidimensional views for high-density point, surface, terrain, voxel, and volumetric analysis.', ['3D Scatter', '3D Bubble', 'Surface', 'Terrain', 'Voxel', 'Density Cloud', 'Volumetric Heatmap']],
+        Relationship: ['Network and flow views for entities, dependencies, paths, and semantic relationships.', ['Force Graph', 'Sankey', 'DAG', 'Chord', 'Knowledge Graph', 'Dependency Graph']],
+        Hierarchy: ['Nested structural views for part-to-whole, containment, org, and taxonomy exploration.', ['Treemap', 'Sunburst', 'Circle Packing', 'Icicle', 'Organization Chart']],
+        Temporal: ['Time-aware visualizations for motion, sequences, forecasts, calendars, and temporal cubes.', ['Timeline', 'Motion Trails', 'Race Chart', 'Calendar Heatmap', 'Forecast', 'Time Cube']],
+        Spatial: ['Geographic and physical-world layers for globe, terrain, hex grids, buildings, and routes.', ['Globe', 'Terrain', 'Hex Grid', 'Building Layer', 'Flight Paths']],
+        AI: ['Model-native views for embeddings, latent spaces, attention, confidence, topics, and neighborhoods.', ['Embedding Space', 'Latent Space', 'Topic Clusters', 'Attention View', 'Confidence Cloud', 'Semantic Neighborhood']],
+        Engineering: ['Operational views for software systems, traces, repositories, service graphs, and architecture.', ['Service Graph', 'Trace View', 'Git Graph', 'Architecture View']]
+      };
+      const grammar = {
+        Primitives: ['Base renderable objects used to construct higher-level visualizations.', ['Point', 'Line', 'Surface', 'Volume', 'Mesh', 'Particle', 'Ribbon', 'Label', 'Edge', 'Cluster']],
+        Encodings: ['Visual channels that map semantic data fields to perceivable attributes.', ['Position', 'Color', 'Size', 'Shape', 'Opacity', 'Motion', 'Glow', 'Rotation', 'Texture']],
+        Interactions: ['User actions that drive exploration, filtering, comparison, navigation, and storytelling.', ['Hover', 'Zoom', 'Orbit', 'Filter', 'Split', 'Compare', 'Timeline', 'Story', 'Bookmark']]
+      };
+      document.querySelector('#architecture').innerHTML = architecture.map((item) => `<span>${item}</span>`).join('');
+      document.querySelector('#components').innerHTML = components.map(([name, description, code]) => `<article class="component-card"><h3>${name}</h3><p>${description}</p><code>${code}</code></article>`).join('');
+      const catalogCard = ([name, [description, items]]) => `<article class="catalog-card"><h3>${name}</h3><p>${description}</p><div class="chips">${items.map((item) => `<span class="chip">${item}</span>`).join('')}</div></article>`;
+      document.querySelector('#families').innerHTML = Object.entries(families).map(catalogCard).join('');
+      document.querySelector('#grammar').innerHTML = Object.entries(grammar).map(catalogCard).join('');
+
+      const canvas = document.querySelector('#atlasCanvas');
+      const context = canvas.getContext('2d');
+      const points = Array.from({ length: 900 }, (_, index) => ({ angle: index * .21, radius: 60 + (index % 100) * 2.5, z: Math.sin(index * .17) * 190, hue: 185 + (index % 150) }));
+      function draw(time) {
+        const { width, height } = canvas; const cx = width / 2; const cy = height / 2;
+        context.clearRect(0, 0, width, height); context.fillStyle = 'rgba(7, 11, 24, .42)'; context.fillRect(0, 0, width, height);
+        for (const point of points) {
+          const spin = time * .00028; const x3 = Math.cos(point.angle + spin) * point.radius; const y3 = Math.sin(point.angle * .76 + spin * 1.3) * point.radius * .58; const z3 = point.z + Math.sin(time * .001 + point.angle) * 80; const scale = 470 / (640 - z3);
+          context.beginPath(); context.fillStyle = `hsla(${point.hue}, 92%, 68%, ${.33 + scale * .42})`; context.arc(cx + x3 * scale, cy + y3 * scale, Math.max(1.2, 4.8 * scale), 0, Math.PI * 2); context.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
