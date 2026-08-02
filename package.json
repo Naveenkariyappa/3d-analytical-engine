@@ -1,0 +1,42 @@
+{
+  "name": "@project-atlas/engine",
+  "version": "0.1.0",
+  "description": "Open-source, GPU-accelerated, AI-native multidimensional visualization engine.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "demo": "python3 -m http.server 4173",
+    "test": "node --test dist/**/*.test.js"
+  },
+  "keywords": [
+    "visualization",
+    "analytics",
+    "gpu",
+    "react",
+    "threejs",
+    "ai"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  },
+  "peerDependencies": {
+    "@react-three/fiber": ">=8",
+    "react": ">=18",
+    "three": ">=0.160"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  }
+}

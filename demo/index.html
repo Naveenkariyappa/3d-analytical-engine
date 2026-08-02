@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project Atlas Visualization Preview</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #070b18;
+        color: #eef4ff;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 20% 10%, rgba(76, 201, 240, 0.24), transparent 28rem),
+          radial-gradient(circle at 80% 0%, rgba(181, 23, 158, 0.22), transparent 24rem),
+          linear-gradient(135deg, #070b18 0%, #10172a 54%, #060712 100%);
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 48px 0;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(360px, 520px);
+        gap: 28px;
+        align-items: stretch;
+      }
+
+      .panel {
+        border: 1px solid rgba(148, 163, 184, 0.26);
+        border-radius: 28px;
+        background: rgba(15, 23, 42, 0.74);
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
+        overflow: hidden;
+      }
+
+      .copy {
+        padding: 36px;
+      }
+
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(2.3rem, 6vw, 5.4rem);
+        line-height: 0.92;
+        letter-spacing: -0.07em;
+      }
+
+      .lead {
+        max-width: 62ch;
+        color: #b9c7dc;
+        font-size: 1.1rem;
+        line-height: 1.7;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .badge {
+        border: 1px solid rgba(125, 211, 252, 0.34);
+        border-radius: 999px;
+        padding: 8px 12px;
+        background: rgba(14, 165, 233, 0.12);
+        color: #dff6ff;
+        font-size: 0.88rem;
+      }
+
+      #atlasCanvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 430px;
+        background: radial-gradient(circle at 50% 45%, rgba(59, 130, 246, 0.2), transparent 23rem);
+      }
+
+      .catalog {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 16px;
+        margin-top: 28px;
+      }
+
+      .card {
+        padding: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 20px;
+        background: rgba(15, 23, 42, 0.62);
+      }
+
+      .card h2 {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: #7dd3fc;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip {
+        border-radius: 999px;
+        padding: 7px 9px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #dbeafe;
+        font-size: 0.82rem;
+      }
+
+      .grammar {
+        margin-top: 28px;
+        padding: 24px;
+      }
+
+      @media (max-width: 880px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <article class="panel copy">
+          <h1>Atlas Visualization Preview</h1>
+          <p class="lead">
+            This static demo turns the Project Atlas catalog into a visible experience: a GPU-inspired point cloud preview plus cards for visualization families, primitives, encodings, and interactions.
+          </p>
+          <div class="badge-row">
+            <span class="badge">Semantic exploration</span>
+            <span class="badge">3D scatter preview</span>
+            <span class="badge">AI-native catalog</span>
+            <span class="badge">Renderer-agnostic plan</span>
+          </div>
+        </article>
+        <div class="panel">
+          <canvas id="atlasCanvas" width="1040" height="860" aria-label="Animated multidimensional point cloud preview"></canvas>
+        </div>
+      </section>
+
+      <section id="catalog" class="catalog" aria-label="Visualization families"></section>
+      <section id="grammar" class="panel grammar" aria-label="Visualization grammar"></section>
+    </main>
+
+    <script type="module">
+      const visualizationFamilies = {
+        Statistical: ['Bar', 'Line', 'Area', 'Scatter', 'Bubble', 'Histogram', 'Heatmap', 'Box Plot', 'Violin', 'Parallel Coordinates', 'Radar'],
+        '3D': ['3D Scatter', '3D Bubble', 'Surface', 'Terrain', 'Voxel', 'Density Cloud', 'Volumetric Heatmap'],
+        Relationship: ['Force Graph', 'Sankey', 'DAG', 'Chord', 'Knowledge Graph', 'Dependency Graph'],
+        Hierarchy: ['Treemap', 'Sunburst', 'Circle Packing', 'Icicle', 'Organization Chart'],
+        Temporal: ['Timeline', 'Motion Trails', 'Race Chart', 'Calendar Heatmap', 'Forecast', 'Time Cube'],
+        Spatial: ['Globe', 'Terrain', 'Hex Grid', 'Building Layer', 'Flight Paths'],
+        AI: ['Embedding Space', 'Latent Space', 'Topic Clusters', 'Attention View', 'Confidence Cloud', 'Semantic Neighborhood'],
+        Engineering: ['Service Graph', 'Trace View', 'Git Graph', 'Architecture View']
+      };
+
+      const grammar = {
+        Primitives: ['Point', 'Line', 'Surface', 'Volume', 'Mesh', 'Particle', 'Ribbon', 'Label', 'Edge', 'Cluster'],
+        Encodings: ['Position', 'Color', 'Size', 'Shape', 'Opacity', 'Motion', 'Glow', 'Rotation', 'Texture'],
+        Interactions: ['Hover', 'Zoom', 'Orbit', 'Filter', 'Split', 'Compare', 'Timeline', 'Story', 'Bookmark']
+      };
+
+      const createCard = ([title, items]) => `
+        <article class="card">
+          <h2>${title}</h2>
+          <div class="chips">${items.map((item) => `<span class="chip">${item}</span>`).join('')}</div>
+        </article>`;
+
+      document.querySelector('#catalog').innerHTML = Object.entries(visualizationFamilies).map(createCard).join('');
+      document.querySelector('#grammar').innerHTML = `<div class="catalog">${Object.entries(grammar).map(createCard).join('')}</div>`;
+
+      const canvas = document.querySelector('#atlasCanvas');
+      const context = canvas.getContext('2d');
+      const points = Array.from({ length: 720 }, (_, index) => ({
+        angle: index * 0.21,
+        radius: 70 + (index % 90) * 2.6,
+        z: Math.sin(index * 0.17) * 180,
+        hue: 185 + (index % 130)
+      }));
+
+      function draw(time) {
+        const width = canvas.width;
+        const height = canvas.height;
+        const cx = width / 2;
+        const cy = height / 2;
+        context.clearRect(0, 0, width, height);
+        context.fillStyle = 'rgba(7, 11, 24, 0.4)';
+        context.fillRect(0, 0, width, height);
+
+        for (const point of points) {
+          const spin = time * 0.00028;
+          const x3 = Math.cos(point.angle + spin) * point.radius;
+          const y3 = Math.sin(point.angle * 0.76 + spin * 1.3) * point.radius * 0.58;
+          const z3 = point.z + Math.sin(time * 0.001 + point.angle) * 80;
+          const scale = 470 / (640 - z3);
+          const x = cx + x3 * scale;
+          const y = cy + y3 * scale;
+          const size = Math.max(1.2, 4.8 * scale);
+
+          context.beginPath();
+          context.fillStyle = `hsla(${point.hue}, 92%, 68%, ${0.33 + scale * 0.42})`;
+          context.arc(x, y, size, 0, Math.PI * 2);
+          context.fill();
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      requestAnimationFrame(draw);
+    </script>
+  </body>
+</html>
